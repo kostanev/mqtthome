@@ -1,0 +1,30 @@
+web_server:
+  host: 0.0.0.0
+  port: 8080
+
+mqtt_client:
+  id: mqtthome
+  host: 192.168.2.2
+  port: 1883
+  user: root
+  pass: password
+
+devices:
+  - id: shellies/kitchen-lamp
+    name: Kitchen lamp
+    type: ShellyDimmer2
+  - id: shellies/sofa-lamp
+    name: Sofa lamp
+    type: ShellyDimmer2
+  - id: shellies/bedroom
+    name: Bedroom lamp
+    type: ShellyDimmer2
+  - id: shellies/children
+    name: Children lamp
+    type: ShellyDimmer2
+  - id: shellies/wc-lamp
+    name: WC lamp
+    type: ShellyDimmer2
+  - id: shellies/bathroom
+    name: Bathroom lamp
+    type: ShellyDimmer2
