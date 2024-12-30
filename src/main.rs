@@ -4,19 +4,24 @@ mod mqtt_client;
 mod state;
 mod web_server;
 
-use crate::devices::Device;
+use crate::{
+    devices::Device,
+    config::Config,
+    mqtt_client::MqttClient,
+    state::State
+};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    let config = config::Config::init()?;
+    let config = Config::init()?;
 
-    let state = state::State::default();
+    let state = State::default();
     state.setup(&config.devices());
 
     let state_clone = state.clone();
     let web_server_task = web_server::init(&config.web_server(), state_clone);
 
-    let mut mqtt_client = mqtt_client::MqttClient::init(&config.mqtt_client()).await?;
+    let mut mqtt_client = MqttClient::init(&config.mqtt_client()).await?;
 
     let state_clone = state.clone();
     let mqtt_processing_task = tokio::spawn(async move {
