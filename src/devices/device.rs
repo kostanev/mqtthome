@@ -1,29 +1,21 @@
-use enum_dispatch::enum_dispatch;
 use serde::Serialize;
-use serde_json::{json, Value};
+use crate::state::CommandTransmitter;
 use crate::devices::ShellyDimmer2;
 
-#[enum_dispatch]
+pub trait Device {
+    fn init(id: String, name: String, command_tx: CommandTransmitter) -> Self;
+    fn parse(&mut self, command: &str, value: &str);
+}
+
 #[derive(Debug, Serialize)]
 pub enum DeviceWrapper {
-    ShellyDimmer2
+    ShellyDimmer2(ShellyDimmer2)
 }
 
 impl DeviceWrapper {
-    pub fn to_json(&self, id: Option<&str>) -> Value {
-        let res = match self {
-            DeviceWrapper::ShellyDimmer2(inner) => inner
+    pub fn parse(&mut self, command: &str, value: &str) {
+        match self {
+            DeviceWrapper::ShellyDimmer2(d) => d.parse(command, value)
         };
-        let mut json = json!(res);
-        if let Some(id) = id {
-            json["id"] = id.into();
-        }
-        json
     }
-}
-
-#[enum_dispatch(DeviceWrapper)]
-pub trait Device {
-    fn get_type(&self) -> &str;
-    fn parse(&mut self, command: &str, value: &str);
 }
